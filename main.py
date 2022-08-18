@@ -18,7 +18,13 @@ def getfile(file_name: str):
             ftp.download_local(file_name, f)
             f.close()
         except:
-            return json.dumps({"message": "File not found"}), 404
+            return (
+                Response(
+                    json.dumps({"message": "File not found"}),
+                    mimetype="application/json",
+                ),
+                404,
+            )
 
         data = open(f"{os.getcwd()}/temp/{file_name}", "rb").read()
         os.remove(f"{os.getcwd()}/temp/{file_name}")
@@ -29,7 +35,12 @@ def getfile(file_name: str):
             headers={"Content-disposition": f"attachment; filename={file_name}"},
         )
     except:
-        return json.dumps({"message": "File not found"}), 404
+        return (
+            Response(
+                json.dumps({"message": "File not found"}), mimetype="application/json"
+            ),
+            404,
+        )
 
 
 @app.route("/api/validate")
@@ -46,5 +57,5 @@ def validate():
             validate_csv(file, open(f"{os.getcwd()}/temp/{file}", "r"))
         )  # format {"valid":bool, "name": str}
         os.remove(f"{os.getcwd()}/temp/{file}")
-    valid = [a for a in validity if a["valid"] == True]
-    return json.dumps(validity)
+    valid = [a for a in validity if a["valid"]]
+    return Response(json.dumps(validity), mimetype="application/json")
