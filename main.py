@@ -14,8 +14,12 @@ ftp = MyFTP(**creds)
 def getfile(file_name: str):
     try:
         f = open(f"{os.getcwd()}/temp/{file_name}", "wb")
-        ftp.download_local(file_name, f)
-        f.close()
+        try:
+            ftp.download_local(file_name, f)
+            f.close()
+        except:
+            return json.dumps({"message": "File not found"}), 404
+
         data = open(f"{os.getcwd()}/temp/{file_name}", "rb").read()
         os.remove(f"{os.getcwd()}/temp/{file_name}")
 
@@ -24,8 +28,8 @@ def getfile(file_name: str):
             mimetype="text/csv",
             headers={"Content-disposition": f"attachment; filename={file_name}"},
         )
-    except Exception as e:
-        return json.stringify({"message": "File not found", "error": e}), 404
+    except:
+        return json.dumps({"message": "File not found"}), 404
 
 
 @app.route("/api/validate")
