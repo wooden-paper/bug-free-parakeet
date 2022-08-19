@@ -5,14 +5,14 @@ from datetime import *
 ------------------------
     DOCUMENTATION
 ------------------------
-Functions: retrieveDates
+Functions: retrieve_dates, get_date
     Explaination: takes two dates and returns files within that range (inclusive) from an FTP server
-Parameters: from_date, to_date
+Parameters: from_date, to_date, myFTP
     Assumption: from_date and to_date are strings of form YYYY-MM-DD 
     e.g. input("What is your start date as YYYY-MM-DD: ") with input 2020-01-01 <- from_date
-Returns: requestedDates
+Returns: requested_dates, invalid
     Explaination: An array of files between the start and end date of form MED_DATE_YYYYMMDDHHMMSS.csv
-NB: Requires valid YYYYMMDD to work (e.g. 20200145 would not be accepted)
+NB: Requires valid YYYYMMDD to work (e.g. 20200145 would not be accepted and would be in invalid)
 """
 
 
@@ -24,7 +24,7 @@ def get_date(offset: int = 0):
 def retrieve_dates(ftp: MyFTP, from_date, to_date):
     invalid = []
     data = ftp.get_files_in_current_directory()
-    # removes first value from list which is the logs.JSON file
+    
     # convert formatted data into dates
     dates = []
     for each in data:
